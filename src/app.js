@@ -1,3 +1,4 @@
+require('dotenv').config({path: '.env'});
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -8,8 +9,10 @@ const morgan = require('morgan');
 
 const productRoutes = require('./routes/product.routes');
 const reviewRoutes = require('./routes/review.routes');
+const paypalRoutes = require('./routes/paypal.routes');
 
 // MIDDLEWARE START
+app.set('view engine', 'ejs');
 
 // Setting cors
 app.use(
@@ -34,8 +37,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Serving static files (css, images etc.)
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join('public')));
 
+app.use('/', paypalRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/review', reviewRoutes);
 

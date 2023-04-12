@@ -1,0 +1,21 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+main {
+	height: 100vh;
+	background-color: #f2f2f2;
+	overflow: scroll;
+}
+
+.card {
+	background-color: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	border-radius: 10px;
+	width: 400px;
+	margin: 20px auto;
+}
