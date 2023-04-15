@@ -24,35 +24,31 @@ const sequelize = new Sequelize(config.development.DB, config.development.USER, 
 // 	logging: false,
 // });
 
-(async () => {
-	try {
-		await sequelize.authenticate();
-		console.log('connected to DB');
-	} catch (error) {
-		console.log('error connecting to DB', error);
-	}
-})();
-
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // MODELS
-db.users = require('./user.model.js')(sequelize, DataTypes, Op);
 db.products = require('./product.model.js')(sequelize, DataTypes, Op);
+db.categories = require('./category.js')(sequelize, DataTypes, Op);
+db.users = require('./user.model.js')(sequelize, DataTypes, Op);
 db.reviews = require('./review.model.js')(sequelize, DataTypes, Op);
 
+// Relations
+// db.products.hasMany(db.reviews);
+// db.reviews.belongsTo(db.products);
+db.products.belongsTo(db.categories, {foreignKey: 'category_id', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
+
+// Sync the database and create tables
 (async () => {
 	try {
-		db.sequelize.sync({force: false});
+		await db.sequelize.authenticate();
+		console.log('connected to DB');
+		await db.sequelize.sync({alter: false});
 		console.log('sync completed');
 	} catch (error) {
 		console.log('error syncing', error);
 	}
 })();
 
-// Relations
-// 1 to Many
-// db.products.hasMany(db.reviews);
-// db.reviews.belongsTo(db.products);
 module.exports = db;

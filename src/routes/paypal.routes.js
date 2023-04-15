@@ -6,7 +6,8 @@ const {
 const express = require('express');
 const paypalRoutes = express.Router();
 
-paypalRoutes.get('/', getIndex);
-paypalRoutes.post('/create-order', createOrder);
+// SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
+// paypalRoutes.get('/', getIndex);
+// paypalRoutes.post('/create-order', createOrder);
 
 module.exports = paypalRoutes;

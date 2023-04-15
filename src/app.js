@@ -8,8 +8,10 @@ const rfs = require('rotating-file-stream');
 const morgan = require('morgan');
 
 const productRoutes = require('./routes/product.routes');
+const categoryRoutes = require('./routes/category.routes');
 const reviewRoutes = require('./routes/review.routes');
-const paypalRoutes = require('./routes/paypal.routes');
+// SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
+// const paypalRoutes = require('./routes/paypal.routes');
 
 // MIDDLEWARE START
 app.set('view engine', 'ejs');
@@ -27,9 +29,10 @@ const accessLogStream = rfs.createStream('access.log', {
 	path: path.join(__dirname, 'log'),
 });
 // setup the logger
-// morgan.token('host', function (req, res) { . // morgan token
-//     return req.hostname;
-// });
+morgan.token('host', function (req, res) {
+	// morgan token
+	return req.hostname;
+});
 app.use(morgan('combined', {stream: accessLogStream}));
 
 // Parsing JSON & formUrlEncoded
@@ -39,8 +42,10 @@ app.use(express.urlencoded({extended: true}));
 // Serving static files (css, images etc.)
 app.use(express.static(path.join('public')));
 
-app.use('/', paypalRoutes);
+// SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
+// app.use('/', paypalRoutes);
 app.use('/api/product', productRoutes);
+app.use('/api/category', categoryRoutes);
 app.use('/api/review', reviewRoutes);
 
 module.exports = app;

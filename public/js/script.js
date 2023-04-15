@@ -1,5 +1,10 @@
 paypal
 	.Buttons({
+		style: {
+			// layout: 'horizontal',
+			color: 'silver',
+			shape: 'pill',
+		},
 		// When the button is clicked, create a new order using the /create-order route and return the order ID
 		createOrder: function () {
 			return fetch('/create-order', {

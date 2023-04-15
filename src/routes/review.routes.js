@@ -3,7 +3,7 @@ const {addReview, getAllReviews} = require('../controllers/review.controller');
 const express = require('express');
 const reviewtRoutes = express.Router();
 
-reviewtRoutes.post('/create-review', addReview);
-reviewtRoutes.get('/all-reviews', getAllReviews);
+reviewtRoutes.get('/', getAllReviews);
+reviewtRoutes.post('/', addReview);
 
 module.exports = reviewtRoutes;
