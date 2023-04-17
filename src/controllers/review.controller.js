@@ -36,22 +36,23 @@ exports.getAllReviews = async (req, res, next) => {
 	}
 };
 
-// exports.getProductReviews = async (req, res, next) => {
-// 	const id = req.params.id;
-// 	try {
-// 		const productReviews = await Product.findAll({
-// 			include: Review,
-// 			where: {
-// 				id: id,
-// 			},
-// 		});
+exports.getReviewsByProductId = async (req, res, next) => {
+	const id = req.params.prodId;
+	try {
+		const product = await db.products.findByPk(1);
+		if (!product) return res.status(404).json({message: `Product with id: ${id} not found.`});
 
-// 		return res.status(200).json({
-// 			message: `All product reviews`,
-// 			data: productReviews,
-// 		});
-// 	} catch (err) {
-// 		console.log(err);
-// 		next();
-// 	}
-// };
+		const reviews = await product.getReviews();
+
+		return res.status(200).json({
+			message: `Successfully fetched reviews for product with id: ${id}`,
+			data: reviews,
+		});
+	} catch (err) {
+		console.log(err);
+		return res.status(500).json({
+			message: 'An error occurred while searching reviews',
+			error: err.message,
+		});
+	}
+};

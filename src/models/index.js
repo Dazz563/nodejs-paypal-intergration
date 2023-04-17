@@ -35,9 +35,12 @@ db.users = require('./user.model.js')(sequelize, DataTypes, Op);
 db.reviews = require('./review.model.js')(sequelize, DataTypes, Op);
 
 // Relations
-// db.products.hasMany(db.reviews);
-// db.reviews.belongsTo(db.products);
+// products - categories
+db.categories.hasMany(db.products, {foreignKey: 'category_id', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
 db.products.belongsTo(db.categories, {foreignKey: 'category_id', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
+// products - reviews
+db.products.hasMany(db.reviews, {foreignKey: 'product_id', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
+db.reviews.belongsTo(db.products, {foreignKey: 'product_id', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
 
 // Sync the database and create tables
 (async () => {

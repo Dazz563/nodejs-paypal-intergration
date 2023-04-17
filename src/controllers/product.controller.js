@@ -1,7 +1,8 @@
 const db = require('../models');
+const {Op} = require('sequelize');
 const Product = db.products;
 const Category = db.categories;
-const {Op} = require('sequelize');
+const Review = db.reviews;
 
 exports.addProduct = async (req, res, next) => {
 	const {title, price, description, published} = req.body;
@@ -30,7 +31,7 @@ exports.addProduct = async (req, res, next) => {
 exports.getAllProducts = async (req, res, next) => {
 	try {
 		const products = await Product.findAll({
-			include: Category,
+			include: [Category, Review],
 		});
 
 		return res.status(200).json({
@@ -101,8 +102,6 @@ exports.deleteProduct = async (req, res, next) => {
 		next();
 	}
 };
-
-// product.controller.js
 
 exports.searchProducts = async (req, res, next) => {
 	const searchTerm = req.params.term;
