@@ -23,6 +23,7 @@ exports.addReview = async (req, res, next) => {
 };
 
 exports.getAllReviews = async (req, res, next) => {
+	console.log(req.cookies);
 	try {
 		const reviews = await Review.findAll();
 
@@ -37,6 +38,7 @@ exports.getAllReviews = async (req, res, next) => {
 };
 
 exports.getReviewsByProductId = async (req, res, next) => {
+	res.cookie('visited', true, {maxAge: 60000});
 	const id = req.params.prodId;
 	try {
 		const product = await db.products.findByPk(1);

@@ -30,7 +30,7 @@ db.sequelize = sequelize;
 
 // MODELS
 db.products = require('./product.model.js')(sequelize, DataTypes, Op);
-db.categories = require('./category.js')(sequelize, DataTypes, Op);
+db.categories = require('./category.model.js')(sequelize, DataTypes, Op);
 db.users = require('./user.model.js')(sequelize, DataTypes, Op);
 db.reviews = require('./review.model.js')(sequelize, DataTypes, Op);
 

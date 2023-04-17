@@ -3,10 +3,15 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const cors = require('cors');
-// npm i rotating-file-stream
 const rfs = require('rotating-file-stream');
 const morgan = require('morgan');
-
+// cookies and authentication
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const passport = require('passport');
+require('./strategies/local');
+// routes
+const authRoutes = require('./routes/auth.routes');
 const productRoutes = require('./routes/product.routes');
 const categoryRoutes = require('./routes/category.routes');
 const reviewRoutes = require('./routes/review.routes');
@@ -35,15 +40,27 @@ morgan.token('host', function (req, res) {
 });
 app.use(morgan('combined', {stream: accessLogStream}));
 
-// Parsing JSON & formUrlEncoded
+// Parsing JSON & formUrlEncoded $ cookies
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+	})
+);
 
 // Serving static files (css, images etc.)
 app.use(express.static(path.join('public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // app.use('/', paypalRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/review', reviewRoutes);
