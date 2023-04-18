@@ -15,7 +15,7 @@ const {authRoutes} = require('./routes/auth.routes');
 const {productRoutes} = require('./routes/product.routes');
 const {categoryRoutes} = require('./routes/category.routes');
 const {reviewRoutes} = require('./routes/review.routes');
-const memeryStore = new session.MemoryStore();
+const memoryStore = new session.MemoryStore();
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // const paypalRoutes = require('./routes/paypal.routes');
 
@@ -50,7 +50,7 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		store: memeryStore,
+		store: memoryStore,
 	})
 );
 
@@ -58,7 +58,7 @@ app.use(
 app.use(express.static(path.join('public')));
 
 app.use((req, res, next) => {
-	console.log(memeryStore.sessions);
+	console.log(memoryStore.sessions);
 	next();
 });
 
