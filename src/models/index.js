@@ -3,10 +3,10 @@ const {config} = require('../../config/dbConfig');
 const {Sequelize, DataTypes, Op} = require('sequelize');
 
 // Developement
-const sequelize = new Sequelize(config.development.DB, config.development.USER, config.development.PASSWORD, {
-	host: config.development.HOST,
-	port: config.development.PORT,
-	dialect: config.development.DIALECT,
+const sequelize = new Sequelize(config.development.database, config.development.user, config.development.password, {
+	host: config.development.host,
+	port: config.development.port,
+	dialect: config.development.dialect,
 	logging: false,
 });
 

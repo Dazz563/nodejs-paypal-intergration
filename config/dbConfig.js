@@ -2,12 +2,12 @@ require('dotenv').config({path: '.env'});
 
 exports.config = {
 	development: {
-		HOST: process.env.DB_HOST,
-		USER: process.env.DB_USER,
-		PASSWORD: process.env.DB_PASSWORD,
-		DB: process.env.DB_NAME,
-		PORT: process.env.DB_PORT,
-		DIALECT: 'mysql',
+		host: process.env.DB_HOST,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+		database: process.env.DB_NAME,
+		port: process.env.DB_PORT,
+		dialect: 'mysql',
 		pool: {
 			max: 5,
 			min: 0,
