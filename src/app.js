@@ -8,6 +8,7 @@ const morgan = require('morgan');
 // cookies and authentication
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+// const MySQLStore = require('express-mysql-session')(session);
 const passport = require('passport');
 require('./strategies/local');
 // routes
@@ -15,7 +16,25 @@ const {authRoutes} = require('./routes/auth.routes');
 const {productRoutes} = require('./routes/product.routes');
 const {categoryRoutes} = require('./routes/category.routes');
 const {reviewRoutes} = require('./routes/review.routes');
-const memoryStore = new session.MemoryStore();
+// const {config} = require('../config/dbConfig');
+// console.log('development details: ', config.development);
+
+// const memoryStore = new MySQLStore(
+// 	{
+// 		expiration: 86400000,
+// 		createDatabaseTable: true,
+// 		schema: {
+// 			tableName: 'sessions',
+// 			columnNames: {
+// 				session_id: 'session_id',
+// 				expires: 'expires',
+// 				data: 'data',
+// 			},
+// 		},
+// 	},
+// 	config.development
+// );
+const memoryStore = new session.MemoryStore(); // not advised for production
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // const paypalRoutes = require('./routes/paypal.routes');
 
@@ -47,6 +66,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
 	session({
+		key: 'user_sid',
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,

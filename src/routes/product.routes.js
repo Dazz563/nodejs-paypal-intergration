@@ -11,7 +11,7 @@ const {requireAuth} = require('../utils/helpers');
 const router = express.Router();
 
 // public routes
-router.get('/', getAllProducts);
+router.get('/', requireAuth, getAllProducts);
 router.get('/:id', getProductById);
 router.get('/search/:term', searchProducts);
 
