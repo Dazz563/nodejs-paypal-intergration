@@ -17,3 +17,10 @@ exports.comparePasswords = async (password, hashedPassword) => {
 		throw new Error(`Error comparing passwords: ${error.message}`);
 	}
 };
+
+exports.requireAuth = (req, res, next) => {
+	if (!req.user) {
+		return res.send(401);
+	}
+	next();
+};

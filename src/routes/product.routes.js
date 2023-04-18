@@ -6,15 +6,18 @@ const {
 	deleteProduct,
 	searchProducts,
 } = require('../controllers/product.controller');
-
 const express = require('express');
-const productRoutes = express.Router();
+const {requireAuth} = require('../utils/helpers');
+const router = express.Router();
 
-productRoutes.post('/', addProduct);
-productRoutes.get('/', getAllProducts);
-productRoutes.get('/:id', getProductById);
-productRoutes.put('/:id', updateProduct);
-productRoutes.delete('/:id', deleteProduct);
-productRoutes.get('/search/:term', searchProducts);
+// public routes
+router.get('/', getAllProducts);
+router.get('/:id', getProductById);
+router.get('/search/:term', searchProducts);
 
-module.exports = productRoutes;
+// private routes
+router.post('/', requireAuth, addProduct);
+router.put('/:id', requireAuth, updateProduct);
+router.delete('/:id', requireAuth, deleteProduct);
+
+module.exports = {productRoutes: router};

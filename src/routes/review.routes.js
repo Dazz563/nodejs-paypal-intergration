@@ -5,10 +5,10 @@ const {
 } = require('../controllers/review.controller');
 
 const express = require('express');
-const reviewtRoutes = express.Router();
+const router = express.Router();
 
-reviewtRoutes.get('/', getAllReviews);
-reviewtRoutes.get('/reviews-by-product/:prodId', getReviewsByProductId);
-reviewtRoutes.post('/', addReview);
+router.get('/', getAllReviews);
+router.get('/reviews-by-product/:prodId', getReviewsByProductId);
+router.post('/', addReview);
 
-module.exports = reviewtRoutes;
+module.exports = {reviewRoutes: router};

@@ -5,18 +5,20 @@ const User = db.users;
 const {comparePasswords} = require('../utils/helpers');
 
 passport.serializeUser((user, done) => {
-	console.log('Serializing user');
-	console.log(user);
+	// console.log('Serializing user');
+	// console.log('user', user.toJSON());
 	done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
+	// console.log('Deserializing user');
+	// console.log('id', id);
 	try {
-		console.log('Deserializing user');
-		console.log('id', id);
 		const user = await User.findOne({where: {id}});
+		if (!user) throw new Error('User not found');
 		done(null, user);
 	} catch (err) {
+		console.log(err);
 		done(err);
 	}
 });
@@ -27,20 +29,25 @@ passport.use(
 			usernameField: 'email',
 		},
 		async (email, password, done) => {
-			console.log('email', email);
-			console.log('password', password);
-
 			try {
-				if (!email || !password) return done(null, false, {message: 'All fields are required'});
+				if (!email || !password) {
+					// console.log('All fields are required');
+					return done(null, false, {message: 'All fields are required'});
+				}
 
 				const user = await User.findOne({where: {email}});
-				if (!user) return done(null, false, {message: 'Invalid Credentials'});
+				if (!user) {
+					// console.log('Invalid Credentials');
+					return done(null, false, {message: 'Invalid Credentials'});
+				}
 
 				const isMatch = await comparePasswords(password, user.password);
 
 				if (isMatch) {
+					// console.log('Logged in Successfully');
 					return done(null, user, {message: 'Logged in Successfully'});
 				} else {
+					// console.log('Incorrect Credentials');
 					return done(null, false, {message: 'Incorrect Credentials'});
 				}
 			} catch (err) {

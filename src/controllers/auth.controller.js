@@ -40,6 +40,7 @@ const User = db.users;
 // };
 
 exports.login = async (req, res, next) => {
+	console.log(req.user.toJSON());
 	res.status(200).json({
 		message: 'Login successful!',
 	});

@@ -11,10 +11,11 @@ const session = require('express-session');
 const passport = require('passport');
 require('./strategies/local');
 // routes
-const authRoutes = require('./routes/auth.routes');
-const productRoutes = require('./routes/product.routes');
-const categoryRoutes = require('./routes/category.routes');
-const reviewRoutes = require('./routes/review.routes');
+const {authRoutes} = require('./routes/auth.routes');
+const {productRoutes} = require('./routes/product.routes');
+const {categoryRoutes} = require('./routes/category.routes');
+const {reviewRoutes} = require('./routes/review.routes');
+const memeryStore = new session.MemoryStore();
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // const paypalRoutes = require('./routes/paypal.routes');
 
@@ -49,11 +50,17 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
+		store: memeryStore,
 	})
 );
 
 // Serving static files (css, images etc.)
 app.use(express.static(path.join('public')));
+
+app.use((req, res, next) => {
+	console.log(memeryStore.sessions);
+	next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());

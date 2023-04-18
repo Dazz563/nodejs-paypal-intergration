@@ -2,17 +2,18 @@ const {
 	login, //
 	register,
 } = require('../controllers/auth.controller');
-const passport = require('passport');
-
 const express = require('express');
-const authRoutes = express.Router();
+const router = express.Router();
 
-authRoutes.post('/login', passport.authenticate('local'), login);
-authRoutes.post('/register', register);
-// authRoutes.get('/', getAllProducts);
-// authRoutes.get('/:id', getProductById);
-// authRoutes.put('/:id', updateProduct);
-// authRoutes.delete('/:id', deleteProduct);
-// authRoutes.get('/search/:term', searchProducts);
+const passport = require('passport');
+const authenticate = passport.authenticate('local', {});
 
-module.exports = authRoutes;
+router.post('/login', authenticate, login);
+router.post('/register', register);
+// router.get('/', getAllProducts);
+// router.get('/:id', getProductById);
+// router.put('/:id', updateProduct);
+// router.delete('/:id', deleteProduct);
+// router.get('/search/:term', searchProducts);
+
+module.exports = {authRoutes: router};
