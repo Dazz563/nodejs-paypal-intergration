@@ -2,39 +2,19 @@ require('dotenv').config({path: '.env'});
 const express = require('express');
 const path = require('path');
 const app = express();
+const corsOptions = require('../config/corsOption');
 const cors = require('cors');
 const rfs = require('rotating-file-stream');
 const morgan = require('morgan');
 // cookies and authentication
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
-// const MySQLStore = require('express-mysql-session')(session);
-const passport = require('passport');
-require('./strategies/local');
+
 // routes
 const {authRoutes} = require('./routes/auth.routes');
 const {productRoutes} = require('./routes/product.routes');
 const {categoryRoutes} = require('./routes/category.routes');
 const {reviewRoutes} = require('./routes/review.routes');
-// const {config} = require('../config/dbConfig');
-// console.log('development details: ', config.development);
 
-// const memoryStore = new MySQLStore(
-// 	{
-// 		expiration: 86400000,
-// 		createDatabaseTable: true,
-// 		schema: {
-// 			tableName: 'sessions',
-// 			columnNames: {
-// 				session_id: 'session_id',
-// 				expires: 'expires',
-// 				data: 'data',
-// 			},
-// 		},
-// 	},
-// 	config.development
-// );
-const memoryStore = new session.MemoryStore(); // not advised for production
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // const paypalRoutes = require('./routes/paypal.routes');
 
@@ -42,12 +22,17 @@ const memoryStore = new session.MemoryStore(); // not advised for production
 app.set('view engine', 'ejs');
 
 // Setting cors
+// app.use(
+// 	cors({
+// 		origin: corsOptions.origin,
+// 		credentials: true,
+// 	})
+// );
 app.use(
 	cors({
 		origin: '*',
 	})
 );
-
 // create a rotating write stream
 const accessLogStream = rfs.createStream('access.log', {
 	interval: '1d', // rotate daily
@@ -64,26 +49,9 @@ app.use(morgan('combined', {stream: accessLogStream}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(
-	session({
-		key: 'user_sid',
-		secret: process.env.SESSION_SECRET,
-		resave: false,
-		saveUninitialized: false,
-		store: memoryStore,
-	})
-);
 
 // Serving static files (css, images etc.)
 app.use(express.static(path.join('public')));
-
-app.use((req, res, next) => {
-	console.log(memoryStore.sessions);
-	next();
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // app.use('/', paypalRoutes);

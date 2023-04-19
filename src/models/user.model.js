@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes, Op) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
+			refreshToken: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				field: 'refresh_token',
+			},
 			createdAt: {
 				type: DataTypes.DATE,
 				field: 'created_at',

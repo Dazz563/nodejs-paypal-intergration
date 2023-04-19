@@ -7,17 +7,17 @@ const {
 	searchProducts,
 } = require('../controllers/product.controller');
 const express = require('express');
-const {requireAuth} = require('../utils/helpers');
+const {verifyJWT} = require('../middleware/verifyJWT');
 const router = express.Router();
 
 // public routes
-router.get('/', requireAuth, getAllProducts);
+router.get('/', verifyJWT, getAllProducts);
 router.get('/:id', getProductById);
 router.get('/search/:term', searchProducts);
 
 // private routes
-router.post('/', requireAuth, addProduct);
-router.put('/:id', requireAuth, updateProduct);
-router.delete('/:id', requireAuth, deleteProduct);
+router.post('/', verifyJWT, addProduct);
+router.put('/:id', verifyJWT, updateProduct);
+router.delete('/:id', verifyJWT, deleteProduct);
 
 module.exports = {productRoutes: router};
