@@ -22,17 +22,13 @@ const {reviewRoutes} = require('./routes/review.routes');
 app.set('view engine', 'ejs');
 
 // Setting cors
-// app.use(
-// 	cors({
-// 		origin: corsOptions.origin,
-// 		credentials: true,
-// 	})
-// );
 app.use(
 	cors({
-		origin: '*',
+		origin: corsOptions.origin,
+		credentials: true, // allows cookies and authorization headers to be included in cross-origin requests.
 	})
 );
+
 // create a rotating write stream
 const accessLogStream = rfs.createStream('access.log', {
 	interval: '1d', // rotate daily

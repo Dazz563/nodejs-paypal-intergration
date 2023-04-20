@@ -5,6 +5,38 @@ const jwt = require('jsonwebtoken');
 const {hashPassword, comparePasswords} = require('../utils/helpers');
 const User = db.users;
 
+exports.register = async (req, res, next) => {
+	try {
+		const {username, email, password} = req.body;
+		const user = await User.findOne({where: {email}});
+
+		if (user) {
+			return res.status(400).json({
+				error: 'User with this email already exists!',
+			});
+		}
+
+		const hashedPassword = await hashPassword(password);
+
+		const newUser = await User.create({
+			username,
+			email,
+			password: hashedPassword,
+		});
+
+		res.status(201).json({
+			message: 'User created!',
+			data: newUser,
+		});
+	} catch (err) {
+		console.log(err);
+		return res.status(500).json({
+			message: 'An error occurred while registering the user.',
+			error: err.message,
+		});
+	}
+};
+
 exports.login = async (req, res, next) => {
 	const {email, password} = req.body;
 
@@ -52,15 +84,15 @@ exports.login = async (req, res, next) => {
 
 		res.cookie('jwt', refreshToken, {
 			httpOnly: true,
-			// sameSite: 'None',
-			// secure: true,
-			maxAge: 24 * 60 * 60 * 7000, // 7 days
+			sameSite: 'none',
+			secure: true,
+			maxAge: 24 * 60 * 60 * 1000, // 1 day
 		});
 
 		return res.status(200).json({
 			message: 'Login successful!',
 			accessToken,
-			refreshToken,
+			// refreshToken,
 		});
 	} catch (err) {
 		console.log(err);
@@ -71,42 +103,10 @@ exports.login = async (req, res, next) => {
 	}
 };
 
-exports.register = async (req, res, next) => {
-	try {
-		const {username, email, password} = req.body;
-		const user = await User.findOne({where: {email}});
-
-		if (user) {
-			return res.status(400).json({
-				error: 'User with this email already exists!',
-			});
-		}
-
-		const hashedPassword = await hashPassword(password);
-
-		const newUser = await User.create({
-			username,
-			email,
-			password: hashedPassword,
-		});
-
-		res.status(201).json({
-			message: 'User created!',
-			data: newUser,
-		});
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json({
-			message: 'An error occurred while registering the user.',
-			error: err.message,
-		});
-	}
-};
-
 exports.refreshToken = async (req, res, next) => {
 	try {
 		const cookies = req.cookies;
-		console.log(cookies);
+		console.log('we are hoping: ', cookies);
 		// check if refresh token exists
 		if (!cookies?.jwt) return res.sendStatus(401);
 		const refreshToken = cookies.jwt;
@@ -152,9 +152,9 @@ exports.logout = async (req, res, next) => {
 		if (!user) {
 			res.clearCookie('jwt', {
 				httpOnly: true,
-				// sameSite: 'None',
-				// secure: true,
-				maxAge: 24 * 60 * 60 * 7000, // 7 days
+				sameSite: 'none',
+				secure: true,
+				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
 			return res.sendStatus(204); // not content
 		}
