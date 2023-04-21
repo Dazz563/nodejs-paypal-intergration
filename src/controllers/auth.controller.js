@@ -89,10 +89,14 @@ exports.login = async (req, res, next) => {
 			maxAge: 24 * 60 * 60 * 1000, // 1 day
 		});
 
+		let returnedUser = user.toJSON();
+		delete returnedUser.refreshToken;
+		delete returnedUser.password;
+
 		return res.status(200).json({
 			message: 'Login successful!',
 			accessToken,
-			// refreshToken,
+			data: [returnedUser],
 		});
 	} catch (err) {
 		console.log(err);
@@ -106,9 +110,8 @@ exports.login = async (req, res, next) => {
 exports.refreshToken = async (req, res, next) => {
 	try {
 		const cookies = req.cookies;
-		console.log('we are hoping: ', cookies);
 		// check if refresh token exists
-		if (!cookies?.jwt) return res.sendStatus(401);
+		if (!cookies?.jwt) return res.sendStatus(401); // unauthorized
 		const refreshToken = cookies.jwt;
 
 		// check if user exists
@@ -141,7 +144,7 @@ exports.logout = async (req, res, next) => {
 	// On client also delete the access token from local storage
 	try {
 		const cookies = req.cookies;
-		console.log(cookies);
+		// console.log(cookies);
 
 		// check if refresh token exists
 		if (!cookies?.jwt) return res.sendStatus(204); // not content
@@ -165,9 +168,9 @@ exports.logout = async (req, res, next) => {
 
 		res.clearCookie('jwt', {
 			httpOnly: true,
-			// sameSite: 'None',
-			// secure: true,
-			maxAge: 24 * 60 * 60 * 7000, // 7 days
+			sameSite: 'none',
+			secure: true,
+			maxAge: 24 * 60 * 60 * 1000, // 1 day
 		});
 
 		return res.sendStatus(204); // not content
