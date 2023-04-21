@@ -14,6 +14,8 @@ const {authRoutes} = require('./routes/auth.routes');
 const {productRoutes} = require('./routes/product.routes');
 const {categoryRoutes} = require('./routes/category.routes');
 const {reviewRoutes} = require('./routes/review.routes');
+const {orderRoutes} = require('./routes/order.routes');
+const {userRoutes} = require('./routes/user.routes');
 
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // const paypalRoutes = require('./routes/paypal.routes');
@@ -52,8 +54,10 @@ app.use(express.static(path.join('public')));
 // SKIP THIS ROUTE IF YOU WOULD LIKE TO USE THE PAYPAL CHECKOUT PAGE IN AN SPA
 // app.use('/', paypalRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/review', reviewRoutes);
+app.use('/api/order', orderRoutes);
 
 module.exports = app;

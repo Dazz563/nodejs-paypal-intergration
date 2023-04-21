@@ -63,7 +63,7 @@ db.products.hasMany(db.orders, {foreignKey: 'product_id', onDelete: 'CASCADE', o
 	try {
 		await db.sequelize.authenticate();
 		console.log('connected to DB');
-		await db.sequelize.sync({alter: false});
+		await db.sequelize.sync({alter: true});
 		console.log('sync completed');
 	} catch (error) {
 		console.log('error syncing', error);
