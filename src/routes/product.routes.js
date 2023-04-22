@@ -11,7 +11,7 @@ const {verifyJWT} = require('../middleware/verifyJWT');
 const router = express.Router();
 
 // public routes
-router.get('/', verifyJWT, getAllProducts);
+router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 router.get('/search/:term', searchProducts);
 

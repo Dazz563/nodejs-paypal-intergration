@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
 				email: user.email,
 			},
 			process.env.ACCESS_TOKEN_SECRET,
-			{expiresIn: '20s'}
+			{expiresIn: '1h'}
 		);
 
 		// create refresh token
@@ -127,7 +127,7 @@ exports.refreshToken = async (req, res, next) => {
 					email: user.email,
 				},
 				process.env.ACCESS_TOKEN_SECRET,
-				{expiresIn: '20s'}
+				{expiresIn: '1h'}
 			);
 			return res.json(accessToken);
 		});
